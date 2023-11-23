@@ -4,19 +4,17 @@ import com.javarush.engine.cell.Color;
 import com.javarush.engine.cell.Game;
 import com.javarush.engine.cell.Key;
 
-import java.io.PrintStream;
-import java.util.Arrays;
 
 public class GameApp extends Game {
-    private final static int SIZE = 3;
+    private final static int SIZE = 5;
     //    private Color[][] gameField = new Color[SIZE][SIZE];
-    private final Color playerMark = Color.GREEN;
-    private final Color aiMark = Color.RED;
-    private final Color empty = Color.WHITE;
-    private final int countToWin = 3;
-    private final int allTurns = SIZE * SIZE;
+    private final Color PLAYER_MARK = Color.GREEN;
+    private final Color AI_MARK = Color.RED;
+    private final Color EMPTY = Color.WHITE;
+    private final int COUNT_TO_WIN = 4;
+    private final int ALL_TURNS = SIZE * SIZE;
     private int countPick = 0;
-    boolean gameStop = false;
+    private boolean gameStop = false;
 
     @Override
     public void start() {
@@ -27,12 +25,12 @@ public class GameApp extends Game {
 
     @Override
     public void onMouseLeftClick(int x, int y) {
-        if (!gameStop) {
+        if (!gameStop && countPick < ALL_TURNS) {
             if (allowToPick(x, y)) {
                 countPick++;
-                setCellColor(x, y, playerMark);
-                if (checkWin(x, y, playerMark)) showWinner(playerMark);
-                if (countPick == allTurns) nobodyWon();
+                setCellColor(x, y, PLAYER_MARK);
+                if (checkWin(x, y, PLAYER_MARK)) showWinner(PLAYER_MARK);
+                if (countPick == ALL_TURNS) nobodyWon();
                 aiTurn();
             }
         }
@@ -43,10 +41,11 @@ public class GameApp extends Game {
         int y = getRandomNumber(SIZE);
 
         if (allowToPick(x, y)) {
-            setCellColor(x, y, aiMark);
-            if (checkWin(x, y, aiMark)) showWinner(aiMark);
-        } else aiTurn();
-//        System.out.println(x + "  " + y);
+            countPick++;
+            setCellColor(x, y, AI_MARK);
+            if (checkWin(x, y, AI_MARK)) showWinner(AI_MARK);
+        } else if (countPick < ALL_TURNS) aiTurn();
+        else return;
     }
 
     @Override
@@ -120,7 +119,7 @@ public class GameApp extends Game {
     }
 
     private boolean checkWinner(int count, Color mark) {
-        if (count == countToWin) {
+        if (count == COUNT_TO_WIN) {
             System.out.println(mark + " is a winner!");
             return true;
         }
@@ -128,7 +127,7 @@ public class GameApp extends Game {
     }
 
     private boolean allowToPick(int x, int y) {
-        return getCellColor(x, y) == empty;
+        return getCellColor(x, y) == EMPTY;
     }
 
 
@@ -137,7 +136,7 @@ public class GameApp extends Game {
         setScreenSize(SIZE, SIZE);
         for (int y = 0; y < SIZE; y++) {
             for (int x = 0; x < SIZE; x++) {
-                setCellColor(x, y, empty);
+                setCellColor(x, y, EMPTY);
             }
         }
 
