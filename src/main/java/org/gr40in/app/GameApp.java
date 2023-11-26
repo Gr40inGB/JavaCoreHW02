@@ -6,7 +6,7 @@ import com.javarush.engine.cell.Key;
 
 
 public class GameApp extends Game {
-    private final static int SIZE = 8;
+    private final static int SIZE = 5;
     private final Color PLAYER_MARK = Color.GREEN;
     private final Color AI_MARK = Color.RED;
     private final Color EMPTY = Color.WHITE;
@@ -23,6 +23,7 @@ public class GameApp extends Game {
         super.start();
     }
 
+
     @Override
     public void onMouseLeftClick(int x, int y) {
         if (!gameStop && countPick < ALL_TURNS) {
@@ -32,6 +33,7 @@ public class GameApp extends Game {
                 if (checkWin(x, y, PLAYER_MARK, COUNT_TO_WIN)) showWinner(PLAYER_MARK);
                 if (countPick == ALL_TURNS) nobodyWon();
                 aiTurn();
+
             }
         }
     }
@@ -46,8 +48,44 @@ public class GameApp extends Game {
             for (int columns = 0; columns < SIZE; columns++) {
                 if (allowToPick(columns, rows)) {
                     setCellColor(columns, rows, PLAYER_MARK);
-                    if (checkWin(columns, rows, PLAYER_MARK, COUNT_TO_WIN-1)) {
+                    if ((!anti_player_maked) && checkWin(columns, rows, PLAYER_MARK, COUNT_TO_WIN + 1)) {
                         setCellColor(columns, rows, AI_MARK);
+                        x = columns;
+                        y = rows;
+                        anti_player_maked = true;
+                        break;
+                    } else setCellColor(columns, rows, EMPTY);
+
+                }
+            }
+            if (anti_player_maked) break;
+        }
+        for (int rows = 0; rows < SIZE; rows++) {
+            for (int columns = 0; columns < SIZE; columns++) {
+                if (allowToPick(columns, rows)) {
+                    setCellColor(columns, rows, PLAYER_MARK);
+                    if ((!anti_player_maked) && checkWin(columns, rows, PLAYER_MARK, COUNT_TO_WIN)) {
+                        setCellColor(columns, rows, AI_MARK);
+                        x = columns;
+                        y = rows;
+                        anti_player_maked = true;
+                        break;
+                    } else setCellColor(columns, rows, EMPTY);
+
+                }
+            }
+            if (anti_player_maked) break;
+        }
+
+        for (int rows = 0; rows < SIZE; rows++) {
+            for (int columns = 0; columns < SIZE; columns++) {
+                if (allowToPick(columns, rows)) {
+                    setCellColor(columns, rows, PLAYER_MARK);
+
+                    if ((!anti_player_maked) && checkWin(columns, rows, PLAYER_MARK, COUNT_TO_WIN - 1)) {
+                        setCellColor(columns, rows, AI_MARK);
+                        x = columns;
+                        y = rows;
                         anti_player_maked = true;
                         break;
                     } else setCellColor(columns, rows, EMPTY);
@@ -60,10 +98,11 @@ public class GameApp extends Game {
             if (allowToPick(x, y)) {
                 countPick++;
                 setCellColor(x, y, AI_MARK);
-                if (checkWin(x, y, AI_MARK,COUNT_TO_WIN)) showWinner(AI_MARK);
+
             } else if (countPick < ALL_TURNS) aiTurn();
-            else return;
+//            else return;
         }
+        if (checkWin(x, y, AI_MARK, COUNT_TO_WIN)) showWinner(AI_MARK);
     }
 
     @Override
@@ -116,8 +155,8 @@ public class GameApp extends Game {
 //        while (checkVector(x, toLeft--, y, 0, mark)) markCount++;
 //        while (checkVector(x, toRight++, y, 0, mark)) markCount++;
 //        if (checkWinner(markCount, mark)) return true;
-        if (mark == PLAYER_MARK) System.out.println(getCountOnLine(x, -1, y, 0, COUNT_TO_WIN - 1));
-        if (mark == PLAYER_MARK) System.out.println(getCountOnLine(x, 1, y, 0, COUNT_TO_WIN - 1));
+//        if (mark == PLAYER_MARK) System.out.println(getCountOnLine(x, -1, y, 0, COUNT_TO_WIN - 1));
+//        if (mark == PLAYER_MARK) System.out.println(getCountOnLine(x, 1, y, 0, COUNT_TO_WIN - 1));
 
 
         if (plusator(x, -1, y, 0, mark) + plusator(x, 1, y, 0, mark) + 1 >= winCountManual) return true;
