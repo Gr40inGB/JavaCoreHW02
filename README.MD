@@ -1,9 +1,14 @@
-package org.gr40in.app;
+#### Game implemented on engine JavaRush game-engine;
 
-import com.javarush.engine.cell.Color;
-import com.javarush.engine.cell.Game;
-import com.javarush.engine.cell.Key;
+![img.png](img.png)
 
+![img_1.png](img_1.png)
+
+* #### Color of cell used as mark player and AI (Player - GREEN, AI - RED, empty field - WHITE)
+* #### Game can show win and draw situation 
+* #### AI will try win or prevent Player
+
+```java
 public class TicTacToe extends Game {
 
     private final static int SIZE = 5;
@@ -162,3 +167,5 @@ public class TicTacToe extends Game {
     //endregion
 
 }
+```
+
